@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SLA Uptime Calculator | Calculate Downtime</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Free Online SLA Uptime Calculator to determine allowed downtime based on SLA percentage. Calculate service availability and optimize uptime.">
+    <meta name="keywords" content="SLA uptime calculator, downtime calculator, SLA percentage, service availability, cloud SLA, IT service uptime">
+    <meta name="author" content="Sachin Suryawanshi">
+    <meta name="robots" content="index, follow">
+
+    <!-- Social Media Meta Tags -->
+    <meta property="og:title" content="SLA Uptime Calculator | Calculate Downtime">
+    <meta property="og:description" content="Determine SLA uptime, downtime, and service availability percentage.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourwebsite.com">
+    <meta property="og:image" content="https://yourwebsite.com/preview-image.png">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="SLA Uptime Calculator | Calculate Downtime">
+    <meta name="twitter:description" content="Easily calculate SLA uptime and downtime based on SLA percentage.">
+    <meta name="twitter:image" content="https://yourwebsite.com/preview-image.png">
+
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #f4f7f9;
+            color: #333;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            text-align: left;
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+            display: none;
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            color: white;
+            background-color: #0073e6;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .calculate-btn:hover {
+            background-color: #005bb5;
+        }
+
+        .results {
+            margin-top: 20px;
+            display: none;
+            background: #eef5fa;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #cddce6;
+            text-align: left;
+        }
+
+        .results p {
+            font-size: 16px;
+            color: #0073e6;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>SLA Uptime Calculator</h1>
+        <p>Enter the SLA percentage to calculate the allowed downtime.</p>
+
+        <div class="form-group">
+            <label for="sla">SLA Percentage (%):</label>
+            <input type="number" id="sla" placeholder="e.g., 99.9">
+            <div class="error" id="errorSLA">Please enter a valid SLA percentage (0 - 100).</div>
+        </div>
+
+        <button class="calculate-btn" onclick="calculateSLA()">Calculate Downtime</button>
+
+        <div class="results" id="result">
+            <h2>Downtime Allowed:</h2>
+            <p><b>Daily:</b> <span id="dailyDowntime"></span></p>
+            <p><b>Weekly:</b> <span id="weeklyDowntime"></span></p>
+            <p><b>Monthly:</b> <span id="monthlyDowntime"></span></p>
+            <p><b>Quarterly:</b> <span id="quarterlyDowntime"></span></p>
+            <p><b>Yearly:</b> <span id="yearlyDowntime"></span></p>
+        </div>
+
+        <div class="footer">
+            Developed By: Sachin Suryawanshi
+        </div>
+    </div>
+
+    <script>
+        function calculateSLA() {
+            let slaInput = document.getElementById("sla");
+            let slaValue = parseFloat(slaInput.value);
+            let errorLabel = document.getElementById("errorSLA");
+            let resultContainer = document.getElementById("result");
+
+            if (isNaN(slaValue) || slaValue <= 0 || slaValue > 100) {
+                errorLabel.style.display = "block";
+                resultContainer.style.display = "none";
+                return;
+            }
+
+            errorLabel.style.display = "none";
+
+            // Total minutes per period
+            let dailyMinutes = 1440;
+            let weeklyMinutes = dailyMinutes * 7;
+            let monthlyMinutes = dailyMinutes * 30.44;
+            let quarterlyMinutes = monthlyMinutes * 3;
+            let yearlyMinutes = dailyMinutes * 365;
+
+            // Calculate downtime
+            function formatTime(minutes) {
+                let min = Math.floor(minutes);
+                let sec = Math.round((minutes - min) * 60);
+                return `${min}m ${sec}s`;
+            }
+
+            let downtimeDaily = (dailyMinutes * (100 - slaValue)) / 100;
+            let downtimeWeekly = (weeklyMinutes * (100 - slaValue)) / 100;
+            let downtimeMonthly = (monthlyMinutes * (100 - slaValue)) / 100;
+            let downtimeQuarterly = (quarterlyMinutes * (100 - slaValue)) / 100;
+            let downtimeYearly = (yearlyMinutes * (100 - slaValue)) / 100;
+
+            document.getElementById("dailyDowntime").textContent = formatTime(downtimeDaily);
+            document.getElementById("weeklyDowntime").textContent = formatTime(downtimeWeekly);
+            document.getElementById("monthlyDowntime").textContent = formatTime(downtimeMonthly);
+            document.getElementById("quarterlyDowntime").textContent = formatTime(downtimeQuarterly);
+            document.getElementById("yearlyDowntime").textContent = formatTime(downtimeYearly);
+
+            resultContainer.style.display = "block";
+        }
+    </script>
+
+</body>
+</html>

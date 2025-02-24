@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online HTML Editor</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Free Online HTML, CSS, and JavaScript Editor with Live Preview. Edit and run code instantly with this web-based code editor.">
+    <meta name="keywords" content="HTML editor, online code editor, free HTML editor, live HTML preview, CSS editor, JavaScript editor, online web development tool">
+    <meta name="author" content="Sachin Suryawanshi">
+    <meta name="robots" content="index, follow">
+
+    <!-- Social Media Meta Tags -->
+    <meta property="og:title" content="Online HTML Editor">
+    <meta property="og:description" content="Edit and run HTML, CSS, and JavaScript in real-time with a live preview. Perfect for web developers and designers.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourwebsite.com">
+    <meta property="og:image" content="https://yourwebsite.com/preview-image.png">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Online HTML Editor">
+    <meta name="twitter:description" content="Edit and run HTML, CSS, and JavaScript in real-time with a live preview.">
+    <meta name="twitter:image" content="https://yourwebsite.com/preview-image.png">
+
+    <!-- Schema Markup for Google Search -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Online HTML Editor",
+      "url": "https://yourwebsite.com",
+      "author": {
+        "@type": "Person",
+        "name": "Sachin Suryawanshi"
+      },
+      "description": "Edit and run HTML, CSS, and JavaScript in real-time with a live preview. Free and easy to use.",
+      "applicationCategory": "DeveloperTool",
+      "operatingSystem": "All"
+    }
+    </script>
+
+    <!-- External Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/mode/xml/xml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/mode/css/css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/mode/htmlmixed/htmlmixed.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/theme/material-darker.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #2b2b2b;
+            color: white;
+        }
+        .editor-container {
+            display: flex;
+            flex: 1;
+            gap: 2px;
+            padding: 10px;
+        }
+        .editor {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #1e1e1e;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .editor-header {
+            background: #333;
+            padding: 5px;
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .CodeMirror {
+            height: 100%;
+        }
+        .preview-container {
+            flex: 0.5;
+            background: white;
+            border-radius: 5px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            margin-top: 5px;
+            height: 40vh;
+        }
+        .preview-header {
+            background: #716b89;
+            color: white;
+            padding: 5px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .run-button {
+            width: 100%;
+            padding: 10px;
+            background: #540bd3;
+            border: none;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+        }
+        .run-button:hover {
+            background: #3115e4;
+        }
+        .footer {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #bbb;
+            font-weight: bold;
+            text-align: center;
+            padding-bottom: 5px;;
+        }
+    </style>
+</head>
+<body>
+   
+    <div class="editor-container">
+        <div class="editor">
+            <div class="editor-header">HTML</div>
+            <textarea id="html-editor"></textarea>
+        </div>
+        <div class="editor">
+            <div class="editor-header">CSS</div>
+            <textarea id="css-editor"></textarea>
+        </div>
+        <div class="editor">
+            <div class="editor-header">JavaScript</div>
+            <textarea id="js-editor"></textarea>
+        </div>
+    </div>
+    <button class="run-button" onclick="runCode()">Run ▶</button>
+    <div class="preview-container">
+        <div class="preview-header">Result</div>
+        <iframe id="preview"></iframe>
+    </div>
+    <div class="footer">
+        Developed By: Sachin Suryawanshi 
+    </div>
+
+    <script>
+        const htmlEditor = CodeMirror.fromTextArea(document.getElementById("html-editor"), {
+            mode: "htmlmixed",
+            theme: "material-darker",
+            lineNumbers: true,
+        });
+        const cssEditor = CodeMirror.fromTextArea(document.getElementById("css-editor"), {
+            mode: "css",
+            theme: "material-darker",
+            lineNumbers: true,
+        });
+        const jsEditor = CodeMirror.fromTextArea(document.getElementById("js-editor"), {
+            mode: "javascript",
+            theme: "material-darker",
+            lineNumbers: true,
+        });
+
+        function runCode() {
+            const html = htmlEditor.getValue();
+            const css = `<style>${cssEditor.getValue()}</style>`;
+            const js = `<script>${jsEditor.getValue()}<\/script>`;
+            
+            const iframe = document.getElementById("preview").contentWindow.document;
+            iframe.open();
+            iframe.write(html + css + js);
+            iframe.close();
+        }
+    </script>
+</body>
+</html>

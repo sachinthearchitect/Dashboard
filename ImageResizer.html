@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Resizer | Resize & Optimize Images</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f4f7f9;
+            padding: 20px;
+        }
+
+        .container {
+            display: flex;
+            max-width: 1100px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .settings-pane {
+            width: 40%;
+            padding: 15px;
+            border-right: 2px solid #ddd;
+        }
+
+        .preview-pane {
+            width: 60%;
+            padding: 15px;
+            text-align: center;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 22px;
+            color: #333;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .upload-section {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .upload-label {
+            display: inline-block;
+            padding: 10px 18px;
+            font-size: 14px;
+            color: white;
+            background-color: #9334ed;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .info-text {
+            font-size: 14px;
+            color: #555;
+            margin-top: 5px;
+            text-align: center;
+        }
+
+        .settings-pane label {
+            font-weight: bold;
+            display: block;
+            margin: 8px 0 4px;
+            color: #ffffff;
+        }
+
+        .settings-pane input,
+        .settings-pane select {
+            width: 100%;
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 5px;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+            display: none;
+            margin-bottom: 10px;
+        }
+
+        .resize-btn {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            color: white;
+            background-color: #0073e6;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .resize-btn:hover {
+            background-color: #005bb5;
+        }
+
+        .preview-container {
+            width: 100%;
+            max-height: 400px;
+            overflow: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: #f8f8f8;
+            padding: 10px;
+        }
+
+        .download-section {
+            text-align: center;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .download-btn {
+            padding: 10px 15px;
+            font-size: 14px;
+            color: white;
+            background-color: #28a745;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .download-btn:hover {
+            background-color: #218838;
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+        }
+
+        .slider-container {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                width: 95%;
+            }
+
+            .settings-pane,
+            .preview-pane {
+                width: 100%;
+                border-right: none;
+                border-bottom: 2px solid #ddd;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Image Resizer</h1>
+    <div class="container">
+        <div class="settings-pane">
+            <div class="upload-section">
+                <label class="upload-label" for="upload">Choose Image</label>
+                <input type="file" id="upload" accept="image/*" onchange="previewImage(event)">
+            </div>
+            <p class="info-text" id="originalSize"></p>
+
+            <label>Resize Mode:</label>
+            <select id="resizeMode" onchange="toggleResizeMode()">
+                <option value="dimensions">By Dimensions</option>
+                <option value="percentage">By Percentage</option>
+            </select>
+
+            <div id="dimensionInputs">
+                <label for="width">Width (px):</label>
+                <input type="number" id="width" placeholder="Enter width">
+                <p class="error" id="widthError">Width is required.</p>
+
+                <label for="height">Height (px):</label>
+                <input type="number" id="height" placeholder="Enter height">
+                <p class="error" id="heightError">Height is required.</p>
+            </div>
+
+            <div class="slider-container" id="percentageInput">
+                <label for="resizePercentage">Resize Percentage:</label>
+                <input type="range" id="resizePercentage" min="1" max="200" value="100"
+                    oninput="updatePercentageValue()">
+                <span id="percentageValue">100%</span>
+            </div>
+
+            <label for="format">Save As:</label>
+            <select id="format">
+                <option value="png">PNG</option>
+                <option value="jpeg">JPEG</option>
+            </select>
+
+            <button class="resize-btn" onclick="resizeImage()">Resize Image</button>
+            <p class="info-text" id="resizedSize"></p>
+        </div>
+
+        <div class="preview-pane">
+
+            <div class="download-section" id="downloadSection">
+                <a id="downloadLink" class="download-btn" download="resized-image.png">Download</a>
+            </div>
+            <div class="preview-container">
+                <canvas id="resizedCanvas"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">Developed By: Sachin Suryawanshi</div>
+
+    <script>
+        let originalImage = new Image();
+
+        function previewImage(event) {
+            let file = event.target.files[0];
+            if (file) {
+                let reader = new FileReader();
+                reader.onload = function (e) {
+                    originalImage.src = e.target.result;
+                    originalImage.onload = function () {
+                        document.getElementById("originalSize").textContent = `Original Size: ${(file.size / 1024 / 1024).toFixed(2)} MB | Resolution: ${originalImage.width}x${originalImage.height}`;
+                        let canvas = document.getElementById("resizedCanvas");
+                        let ctx = canvas.getContext("2d");
+                        canvas.width = originalImage.width;
+                        canvas.height = originalImage.height;
+                        ctx.drawImage(originalImage, 0, 0, originalImage.width, originalImage.height);
+                    };
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function toggleResizeMode() {
+            let mode = document.getElementById("resizeMode").value;
+            document.getElementById("dimensionInputs").style.display = mode === "dimensions" ? "block" : "none";
+            document.getElementById("percentageInput").style.display = mode === "percentage" ? "block" : "none";
+        }
+
+        function resizeImage() {
+            let canvas = document.getElementById("resizedCanvas");
+            let ctx = canvas.getContext("2d");
+            let format = document.getElementById("format").value;
+            let mode = document.getElementById("resizeMode").value;
+
+            let width = document.getElementById("width").value;
+            let height = document.getElementById("height").value;
+
+            document.getElementById("widthError").style.display = width ? "none" : "block";
+            document.getElementById("heightError").style.display = height ? "none" : "block";
+
+            if (mode === "dimensions" && (!width || !height)) {
+                return;
+            }
+
+            width = mode === "dimensions" ? width : (originalImage.width * document.getElementById("resizePercentage").value / 100);
+            height = mode === "dimensions" ? height : (originalImage.height * document.getElementById("resizePercentage").value / 100);
+
+            canvas.width = width;
+            canvas.height = height;
+            ctx.drawImage(originalImage, 0, 0, width, height);
+
+            document.getElementById("downloadLink").href = canvas.toDataURL(`image/${format}`);
+            document.getElementById("downloadSection").style.display = "block";
+        }
+    </script>
+
+</body>
+
+</html>

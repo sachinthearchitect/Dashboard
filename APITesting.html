@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A powerful API testing tool for sending GET and POST requests with custom headers, bearer token, and JSON body.">
+    <meta name="keywords" content="API Testing, Postman Alternative, HTTP Requests, JSON, Bearer Token, Fetch API">
+    <meta name="author" content="Your Name">
+    <title>API Testing Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #202124;
+            color: #ffffff;
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+        }
+        .container {
+            background-color: #323639;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: none;
+            border-radius: 5px;
+            background-color: #424649;
+            color: #ffffff;
+        }
+        button {
+            background-color: #ff6c37;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #e65a2e;
+        }
+        pre {
+            background-color: #1e1e1e;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>API Testing Tool</h2>
+        <label for="method">HTTP Method:</label>
+        <select id="method">
+            <option value="GET">GET</option>
+            <option value="POST">POST</option>
+        </select>
+        
+        <label for="url">API URL:</label>
+        <input type="text" id="url" placeholder="Enter API URL...">
+        
+        <label for="token">Bearer Token (Optional):</label>
+        <input type="text" id="token" placeholder="Enter Bearer Token...">
+        
+        <label for="headers">Custom Headers (JSON format):</label>
+        <textarea id="headers" rows="3" placeholder='{"Content-Type": "application/json"}'></textarea>
+        
+        <label for="body">Request Body (JSON format, for POST only):</label>
+        <textarea id="body" rows="5" placeholder='{"key": "value"}'></textarea>
+        
+        <button onclick="sendRequest()">Send Request</button>
+        
+        <h3>Response:</h3>
+        <pre id="response">Waiting for response...</pre>
+    </div>
+    
+    <script>
+        async function sendRequest() {
+            const method = document.getElementById("method").value;
+            const url = document.getElementById("url").value.trim();
+            const token = document.getElementById("token").value.trim();
+            const headersInput = document.getElementById("headers").value.trim();
+            const bodyInput = document.getElementById("body").value.trim();
+            
+            if (!url) {
+                document.getElementById("response").textContent = "Error: API URL is required.";
+                return;
+            }
+            
+            let headers = {};
+            if (headersInput) {
+                try {
+                    headers = JSON.parse(headersInput);
+                } catch (e) {
+                    document.getElementById("response").textContent = "Error: Invalid JSON in headers.";
+                    return;
+                }
+            }
+            
+            if (token) {
+                headers["Authorization"] = `Bearer ${token}`;
+            }
+            
+            let options = {
+                method,
+                headers,
+                mode: 'cors' // Resolve CORS issue
+            };
+            
+            if (method === "POST" && bodyInput) {
+                try {
+                    options.body = JSON.stringify(JSON.parse(bodyInput));
+                } catch (e) {
+                    document.getElementById("response").textContent = "Error: Invalid JSON in request body.";
+                    return;
+                }
+            }
+            
+            try {
+                const res = await fetch(url, options);
+                const result = await res.json();
+                document.getElementById("response").textContent = JSON.stringify(result, null, 4);
+            } catch (error) {
+                document.getElementById("response").textContent = "Error: " + error.message;
+            }
+        }
+    </script>
+</body>
+</html>

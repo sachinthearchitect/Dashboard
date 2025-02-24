@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Car Game</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .game-container {
+      position: relative;
+      width: 300px;
+      height: 500px;
+      background-color: #222;
+      border: 2px solid #555;
+      overflow: hidden;
+    }
+
+    .game-area {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    #car {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 40px;
+      color: #ffcc00;
+    }
+
+    .obstacle {
+      position: absolute;
+      font-size: 30px;
+      color: #ff0000;
+    }
+
+    .score {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      color: #fff;
+      font-size: 18px;
+      z-index: 10;
+    }
+
+    .game-over {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #fff;
+      font-size: 24px;
+      text-align: center;
+      display: none;
+    }
+
+    #restart {
+      margin-top: 10px;
+      padding: 5px 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <div class="score">Score: <span id="score">0</span></div>
+    <div class="game-area">
+      <div id="car">🛺</div>
+    </div>
+    <div class="game-over">Game Over! <button id="restart">Restart</button></div>
+  </div>
+  <script>
+    const car = document.getElementById('car');
+    const gameArea = document.querySelector('.game-area');
+    const scoreElement = document.getElementById('score');
+    const gameOverElement = document.querySelector('.game-over');
+    const restartButton = document.getElementById('restart');
+
+    let score = 0;
+    let carLeft = 125; // Initial position of the car
+    let gameSpeed = 2;
+    let isGameOver = false;
+
+    // Move car left and right
+    document.addEventListener('keydown', (e) => {
+      if (isGameOver) return;
+
+      if (e.key === 'ArrowLeft' && carLeft > 0) {
+        carLeft -= 10;
+      } else if (e.key === 'ArrowRight' && carLeft < 250) {
+        carLeft += 10;
+      }
+      car.style.left = `${carLeft}px`;
+    });
+
+    // Create obstacles
+    function createObstacle() {
+      if (isGameOver) return;
+
+      const obstacle = document.createElement('div');
+      obstacle.classList.add('obstacle');
+      obstacle.textContent = '🚧'; // Obstacle symbol
+      obstacle.style.left = `${Math.random() * 250}px`;
+      gameArea.appendChild(obstacle);
+
+      let obstacleTop = 0;
+
+      const obstacleInterval = setInterval(() => {
+        if (obstacleTop > 500) {
+          clearInterval(obstacleInterval);
+          gameArea.removeChild(obstacle);
+          score++;
+          scoreElement.textContent = score;
+        } else if (
+          obstacleTop > 400 &&
+          carLeft < parseInt(obstacle.style.left) + 30 &&
+          carLeft + 30 > parseInt(obstacle.style.left)
+        {
+          clearInterval(obstacleInterval);
+          gameOver();
+        } else {
+          obstacleTop += gameSpeed;
+          obstacle.style.top = `${obstacleTop}px`;
+        }
+      }, 20);
+    }
+
+    // Game over function
+    function gameOver() {
+      isGameOver = true;
+      gameOverElement.style.display = 'block';
+    }
+
+    // Restart game
+    restartButton.addEventListener('click', () => {
+      gameOverElement.style.display = 'none';
+      isGameOver = false;
+      score = 0;
+      scoreElement.textContent = score;
+      carLeft = 125;
+      car.style.left = `${carLeft}px`;
+      gameArea.innerHTML = ''; // Clear all obstacles
+      gameArea.appendChild(car);
+      startGame();
+    });
+
+    // Start game
+    function startGame() {
+      setInterval(createObstacle, 1000);
+    }
+
+    startGame();
+  </script>
+</body>
+</html>

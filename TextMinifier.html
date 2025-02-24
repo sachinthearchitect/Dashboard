@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Minifier | Optimize & Compress Text</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Free Online Text Minifier instantly compresses and optimizes your text for faster web page loading and reduced bandwidth usage.">
+    <meta name="keywords" content="text minifier, optimize text, compress text, remove extra spaces, minify text, fast loading text, online text minifier">
+    <meta name="author" content="Sachin Suryawanshi">
+    <meta name="robots" content="index, follow">
+
+    <!-- Social Media Meta Tags -->
+    <meta property="og:title" content="Text Minifier | Optimize & Compress Text">
+    <meta property="og:description" content="Instantly minify and optimize your text for faster web pages and reduced bandwidth.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourwebsite.com">
+    <meta property="og:image" content="https://yourwebsite.com/preview-image.png">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Text Minifier | Optimize & Compress Text">
+    <meta name="twitter:description" content="Instantly minify and optimize your text for faster web pages and reduced bandwidth.">
+    <meta name="twitter:image" content="https://yourwebsite.com/preview-image.png">
+
+    <!-- Schema Markup for Google Search -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Text Minifier",
+      "url": "https://yourwebsite.com",
+      "author": {
+        "@type": "Person",
+        "name": "Sachin Suryawanshi"
+      },
+      "description": "Instantly minify and optimize your text for faster web pages and reduced bandwidth.",
+      "applicationCategory": "Utility",
+      "operatingSystem": "All"
+    }
+    </script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #2b2b2b;
+            color: white;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            width: 80%;
+            max-width: 900px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            color: black;
+        }
+        h1 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        p {
+            margin-bottom: 10px;
+        }
+        textarea {
+            width: 100%;
+            height: 250px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: none;
+            background: #f8f8f8;
+        }
+        .output-container {
+            margin-top: 15px;
+            padding: 10px;
+            background: #f8f8f8;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            text-align: left;
+            font-size: 16px;
+            color: black;
+            white-space: pre-wrap;
+            position: relative;
+        }
+        .output-container strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .button {
+            width: 100%;
+            padding: 10px;
+            background: #324dd6;
+            border: none;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        .button:hover {
+            background: #5d15e4;
+        }
+        .footer {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #bbb;
+            font-weight: bold;
+            text-align: center;
+        }
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Text Minifier</h1>
+        <p>Instantly minify and optimize your text for faster web pages and reduced bandwidth.</p>
+        <br>
+
+        <textarea id="textInput" placeholder="Enter your text here..."></textarea>
+
+        <button class="button" onclick="minifyText()">Minify Text</button>
+
+        <div class="output-container">
+            <strong>Minified Text:</strong>
+            <div id="minifiedText"></div>
+        </div>
+
+        <button class="button" onclick="copyMinifiedText()">Copy</button>
+
+        <div class="footer">
+            Developed By: Sachin Suryawanshi
+        </div>
+    </div>
+
+    <script>
+        function minifyText() {
+            let inputText = document.getElementById("textInput").value;
+            if (!inputText.trim()) {
+                document.getElementById("minifiedText").textContent = "No text provided.";
+                return;
+            }
+
+            // Minify text: remove unnecessary spaces, line breaks, and trim text
+            let minified = inputText
+                .replace(/\s+/g, ' ')  // Replace multiple spaces with a single space
+                .replace(/\n+/g, ' ')   // Replace new lines with a space
+                .trim();                // Trim leading and trailing spaces
+
+            document.getElementById("minifiedText").textContent = minified;
+        }
+
+        function copyMinifiedText() {
+            let minifiedText = document.getElementById("minifiedText").textContent;
+            if (!minifiedText || minifiedText === "No text provided.") {
+                return;
+            }
+
+            navigator.clipboard.writeText(minifiedText).then(() => {
+                let copyButton = document.querySelector(".button:last-child");
+                copyButton.textContent = "Copied!";
+                setTimeout(() => {
+                    copyButton.textContent = "Copy";
+                }, 2000);
+            }).catch(err => {
+                console.error("Failed to copy text: ", err);
+            });
+        }
+    </script>
+
+</body>
+</html>
