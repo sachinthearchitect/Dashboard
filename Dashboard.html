@@ -1,15 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard | My Tools</title>
 
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XNJMRM9H73"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-XNJMRM9H73');
+    </script>
+    <!-- End Google Analytics -->
+
     <style>
-   * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
-        body { background-color: #000000; color: black; text-align: center; padding: 20px; }
-        h1 { font-size: 28px; margin-bottom: 20px; }
-        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #000000;
+            color: black;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
         .dashboard {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -32,18 +59,42 @@
             box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
         }
 
-        .widget:nth-child(6n+1) { background: linear-gradient(135deg, #A4C2F4, #6B9BF4); }  /* Light Blue Gradient */
-        .widget:nth-child(6n+2) { background: linear-gradient(135deg, #B6D7A8, #7BBF63); }  /* Light Green Gradient */
-        .widget:nth-child(6n+3) { background: linear-gradient(135deg, #F9CB9C, #F4A76B); }  /* Light Orange Gradient */
-        .widget:nth-child(6n+4) { background: linear-gradient(135deg, #FFD966, #FFC72A); }  /* Light Yellow Gradient */
-        .widget:nth-child(6n+5) { background: linear-gradient(135deg, #E6B8AF, #D88E7B); }  /* Light Red Gradient */
-        .widget:nth-child(6n+6) { background: linear-gradient(135deg, #D5A6BD, #BF6E9E); }  /* Light Purple Gradient */
+        .widget:nth-child(6n+1) {
+            background: linear-gradient(135deg, #A4C2F4, #6B9BF4);
+        }
+
+        /* Light Blue Gradient */
+        .widget:nth-child(6n+2) {
+            background: linear-gradient(135deg, #B6D7A8, #7BBF63);
+        }
+
+        /* Light Green Gradient */
+        .widget:nth-child(6n+3) {
+            background: linear-gradient(135deg, #F9CB9C, #F4A76B);
+        }
+
+        /* Light Orange Gradient */
+        .widget:nth-child(6n+4) {
+            background: linear-gradient(135deg, #FFD966, #FFC72A);
+        }
+
+        /* Light Yellow Gradient */
+        .widget:nth-child(6n+5) {
+            background: linear-gradient(135deg, #E6B8AF, #D88E7B);
+        }
+
+        /* Light Red Gradient */
+        .widget:nth-child(6n+6) {
+            background: linear-gradient(135deg, #D5A6BD, #BF6E9E);
+        }
+
+        /* Light Purple Gradient */
 
         .widget:hover {
             background: linear-gradient(135deg, #D9534F, #A8322D) !important;
             transform: scale(1.05);
             box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
-            color:white;
+            color: white;
         }
 
         .widget img {
@@ -58,14 +109,19 @@
         }
 
         @media (max-width: 1024px) {
-            .dashboard { grid-template-columns: repeat(2, 1fr); }
+            .dashboard {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         @media (max-width: 600px) {
-            .dashboard { grid-template-columns: repeat(1, 1fr); }
+            .dashboard {
+                grid-template-columns: repeat(1, 1fr);
+            }
         }
     </style>
 </head>
+
 <body>
 
     <h1 style="color: white;">My Tools Dashboard</h1>
@@ -92,7 +148,7 @@
             <div class="widget-title">Image Resizer</div>
         </div>
 
-       <div class="widget" onclick="window.open('TextMinifier.html', '_blank')">
+        <div class="widget" onclick="window.open('TextMinifier.html', '_blank')">
             <div class="widget-title">Text Minifier</div>
         </div>
 
@@ -108,8 +164,9 @@
             <div class="widget-title">Color Picker</div>
         </div>
 
-    
+
 
     </div>
 </body>
+
 </html>
